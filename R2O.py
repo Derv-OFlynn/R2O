@@ -19,42 +19,45 @@ def colour_select() -> str:
     blue = '#69E7E4'
     purple = '#D2B3FFA6'
 
-    colour = input(
-        "\n"
-        + bidirectional_pad("Please enter which colour you want the new obsidian highlights to be in:", MAIN_EMOJI)
-        + "\n\n"
-        + bidirectional_pad("1. red", MAIN_EMOJI)
-        + "\n"
-        + bidirectional_pad("2. orange", MAIN_EMOJI)
-        + "\n"
-        + bidirectional_pad("3. yellow", MAIN_EMOJI)
-        + "\n"
-        + bidirectional_pad("4. green", MAIN_EMOJI)
-        + "\n"
-        + bidirectional_pad("5. blue", MAIN_EMOJI)
-        + "\n"
-        + bidirectional_pad("6. purple", MAIN_EMOJI)
-    )
-    
-    match colour:
-        case '1':
-            highlight_colour = red
-            return highlight_colour
-        case '2':
-            highlight_colour = orange
-            return highlight_colour 
-        case '3':
-            highlight_colour = yellow
-            return highlight_colour
-        case '4':
-            highlight_colour = green
-            return highlight_colour
-        case '5':
-            highlight_colour = blue
-            return highlight_colour
-        case '6':
-            highlight_colour = purple
-            return highlight_colour
+    while(1):
+        colour = input(
+            "\n"
+            + bidirectional_pad("Please enter which colour you want the new obsidian highlights to be in:", MAIN_EMOJI)
+            + "\n\n"
+            + bidirectional_pad("1. red", MAIN_EMOJI)
+            + "\n"
+            + bidirectional_pad("2. orange", MAIN_EMOJI)
+            + "\n"
+            + bidirectional_pad("3. yellow", MAIN_EMOJI)
+            + "\n"
+            + bidirectional_pad("4. green", MAIN_EMOJI)
+            + "\n"
+            + bidirectional_pad("5. blue", MAIN_EMOJI)
+            + "\n"
+            + bidirectional_pad("6. purple", MAIN_EMOJI)
+        )
+        
+        match colour:
+            case '1':
+                highlight_colour = red
+                return highlight_colour
+            case '2':
+                highlight_colour = orange
+                return highlight_colour 
+            case '3':
+                highlight_colour = yellow
+                return highlight_colour
+            case '4':
+                highlight_colour = green
+                return highlight_colour
+            case '5':
+                highlight_colour = blue
+                return highlight_colour
+            case '6':
+                highlight_colour = purple
+                return highlight_colour
+            case _:
+                print("\n" + bidirectional_pad("Invalid colour choice", MAIN_EMOJI))
             
     
 def menu_select() -> str:
@@ -128,30 +131,31 @@ def file_amalgam(lines):
         destination.writelines(new_data)
 
 
-# This should return the text, not write it to a file.
 def slayer(lines) -> List[str]:
     """
     Intake a file object and a list of elements making of the contents of a previously read file.
-    Writes the contents of the list to the new file, unless a line contains a keyphrase that is meant to be excluded
-    Returns the number of links removed
+    The user is promted to select which colour they want highlighted.
+    Line by line, it replaces the first "==" if finds with the opening tag of the highlight colour and
+    the second "==" is replaced by the closing tag of the highlight colour.
     """
 
+    #Function to select highlight colour
     highlight_colour = colour_select()
     
-    equal_count = 1
+    equal_count = 0
     new_text = []
     for line in lines:
         line = str(line)
         
-        if equal_count % 2 == 1:
+        if equal_count % 2 == 0:
             line = line.replace("==", '<mark style="background:'+ highlight_colour +';">', 1)
             equal_count += 1
         
-        if equal_count % 2 == 0:
+        if equal_count % 2 == 1:
             line = line.replace("==", '</mark>', 1)
             equal_count += 1
         
-        new_text.append(line.rstrip('\n'))
+        new_text.append(line)
         
     print(bidirectional_pad(f"{equal_count / 2} hightlights have been reformatted!", MAIN_EMOJI))
     return new_text
