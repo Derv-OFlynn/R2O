@@ -147,13 +147,14 @@ def slayer(lines) -> List[str]:
     for line in lines:
         line = str(line)
         
-        if equal_count % 2 == 0:
-            line = line.replace("==", '<mark style="background:'+ highlight_colour +';">', 1)
-            equal_count += 1
-        
-        if equal_count % 2 == 1:
-            line = line.replace("==", '</mark>', 1)
-            equal_count += 1
+        while line.find("==") != -1:
+            if equal_count % 2 == 0:
+                line = line.replace("==", '<mark style="background:'+ highlight_colour +';">', 1)
+                equal_count += 1
+            
+            if equal_count % 2 == 1:
+                line = line.replace("==", '</mark>', 1)
+                equal_count += 1
         
         new_text.append(line)
         
