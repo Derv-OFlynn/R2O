@@ -13,8 +13,8 @@ def bidirectional_pad(text: str, pad: str, num: int = 1) -> str:
 def colour_select() -> str:
     highlight_colour = ''
     red = '#FF5582A6'
-    orange = '#FFB886CA6'
-    yellow = '#FFF3A3A6'
+    orange = '#BD6500'
+    yellow = '#BABD00'
     green = '#69E772'
     blue = '#69E7E4'
     purple = '#D2B3FFA6'
