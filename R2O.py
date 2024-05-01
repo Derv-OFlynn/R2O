@@ -17,7 +17,7 @@ def colour_select() -> str:
     yellow = '#BABD00'
     green = '#69E772'
     blue = '#69E7E4'
-    purple = '#D2B3FFA6'
+    purple = '#AD21D9'
 
     while(1):
         colour = input(
