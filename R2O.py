@@ -130,35 +130,125 @@ def file_amalgam(lines):
         new_data = slayer(lines)
         destination.writelines(new_data)
 
+def syntax_lang_select(line):
+    '''Function to intake the language that the user wants the Syntax Highlighting of Code Snippets to be in
+    '''
+    
+    while(1):
+        lang = input(
+            "\n"
+            + bidirectional_pad("A code snippet has been detected. Please enter which Programming Language you want the Syntax Highlighting to be in:", MAIN_EMOJI)
+            + "\n\n"
+            + bidirectional_pad("1. None", MAIN_EMOJI)
+            + "\n"
+            + bidirectional_pad("2. C", MAIN_EMOJI)
+            + "\n"
+            + bidirectional_pad("3. Python", MAIN_EMOJI)
+            + "\n"
+            + bidirectional_pad("4. Java", MAIN_EMOJI)
+            + "\n"
+            + bidirectional_pad("5. HTML", MAIN_EMOJI)
+            + "\n"
+            + bidirectional_pad("6. CSS", MAIN_EMOJI)
+            + "\n"
+            + bidirectional_pad("7. PHP", MAIN_EMOJI)
+        )
+        
+        match lang:
+            case '1':
+                syntax_lang = ""
+                return syntax_lang
+            case '2':
+                syntax_lang = "```C"
+                return syntax_lang
+            case '3':
+                syntax_lang = "```Python"
+                return syntax_lang
+            case '4':
+                syntax_lang = "```Java"
+                return syntax_lang
+            case '5':
+                syntax_lang = "```HTML"
+                return syntax_lang
+            case '6':
+                syntax_lang = "```CSS"
+                return syntax_lang
+            case '7':
+                syntax_lang = "```PHP"
+                return syntax_lang
+            case _:
+                print("\n" + bidirectional_pad("Invalid colour choice", MAIN_EMOJI))
+            
+            
+def replacer(line, key, target, target2):
+    '''Function that replaces given markdown highlighter syntax with Obsidian Highlightr syntax. 
+    Must alternate due to opening and closing tags.
+    '''
+    counter = 0
 
+    while line.find(key) != -1:
+        if counter % 2 == 0:
+            line = line.replace(key, target, 1)
+            counter += 1
+
+        if counter % 2 == 1:
+            line = line.replace(key, target2, 1)
+            counter += 1
+    
+    return line
+
+def syntax_replacer(line, key, target, counter):
+    '''Function that replaces given markdown highlighter syntax with Obsidian Highlightr syntax. 
+    Must alternate due to opening and closing tags.
+    '''
+    print(line)
+    if counter % 2 == 0:
+        line = line.replace(key, target, 1)
+            
+    return line
+    
+    
 def slayer(lines) -> List[str]:
     """
     Intake a file object and a list of elements making of the contents of a previously read file.
     The user is promted to select which colour they want highlighted.
-    Line by line, it replaces the first "==" if finds with the opening tag of the highlight colour and
-    the second "==" is replaced by the closing tag of the highlight colour.
+    Line by line, it replaces the first "==" or "^^" it finds with the opening tag of the highlight colour and
+    the second "=="/"^^" is replaced by the closing tag of the highlight colour.
     """
 
     #Function to select highlight colour
     highlight_colour = colour_select()
     
     equal_count = 0
+    hat_count = 0
+    syntax_lang_count = 0
+    
     new_text = []
+    
+    syntax_lang_flag = False
+    
     for line in lines:
         line = str(line)
         
-        while line.find("==") != -1:
-            if equal_count % 2 == 0:
-                line = line.replace("==", '<mark style="background:'+ highlight_colour +';">', 1)
-                equal_count += 1
+                
+        line = replacer(line, "==", '<mark style="background:'+ highlight_colour +';">', '</mark>')
+
+        line = replacer(line, "^^", '<mark style="background:'+ highlight_colour +';">', '</mark>')
+
+                
+        if line.find("```") != -1 and syntax_lang_flag == False:
+            syntax_lang = syntax_lang_select(line)
+            syntax_lang_flag = True
+        
+        
+        if line.find("```") != -1 and syntax_lang_flag == True:
+            line = syntax_replacer(line, "```", syntax_lang, syntax_lang_count)
+            syntax_lang_count += 1
             
-            if equal_count % 2 == 1:
-                line = line.replace("==", '</mark>', 1)
-                equal_count += 1
         
         new_text.append(line)
         
-    print(bidirectional_pad(f"{equal_count / 2} hightlights have been reformatted!", MAIN_EMOJI))
+    print(bidirectional_pad(f"{(equal_count + hat_count) / 2} hightlights have been reformatted!", MAIN_EMOJI))
     return new_text
 
 
