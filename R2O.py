@@ -6,7 +6,6 @@ from typing import List
 
 MAIN_EMOJI = "\U0001F5CA" * ("--no-emojis" not in sys.argv)
 
-
 def bidirectional_pad(text: str, pad: str, num: int = 1) -> str:
     return (pad * num) + text + (pad * num)
 
@@ -195,7 +194,8 @@ def replacer(line, key, target, target2):
             line = line.replace(key, target2, 1)
             counter += 1
     
-    return line
+    result = [line, counter]
+    return result
 
 def syntax_replacer(line, key, target, counter):
     '''Function that replaces given markdown highlighter syntax with Obsidian Highlightr syntax. 
@@ -231,10 +231,13 @@ def slayer(lines) -> List[str]:
         line = str(line)
         
                 
-        line = replacer(line, "==", '<mark style="background:'+ highlight_colour +';">', '</mark>')
-
-        line = replacer(line, "^^", '<mark style="background:'+ highlight_colour +';">', '</mark>')
-
+        equal_replace_arr = replacer(line, "==", '<mark style="background:'+ highlight_colour +';">', '</mark>')
+        line = equal_replace_arr[0]
+        equal_count += equal_replace_arr[1]
+        
+        hat_replace_arr = replacer(line, "^^", '<mark style="background:'+ highlight_colour +';">', '</mark>')
+        line = hat_replace_arr[0]
+        hat_count += hat_replace_arr[1]
                 
         if line.find("```") != -1 and syntax_lang_flag == False:
             syntax_lang = syntax_lang_select(line)
