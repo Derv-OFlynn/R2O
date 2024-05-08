@@ -222,6 +222,7 @@ def slayer(lines) -> List[str]:
     equal_count = 0
     hat_count = 0
     syntax_lang_count = 0
+    heading_count = 0
     
     new_text = []
     
@@ -230,6 +231,9 @@ def slayer(lines) -> List[str]:
     for line in lines:
         line = str(line)
         
+        if line[0] == "-":
+            line = line.replace("-", "###", 1)
+            heading_count += 1
                 
         equal_replace_arr = replacer(line, "==", '<mark style="background:'+ highlight_colour +';">', '</mark>')
         line = equal_replace_arr[0]
@@ -251,7 +255,10 @@ def slayer(lines) -> List[str]:
         
         new_text.append(line)
         
-    print(bidirectional_pad(f"{(equal_count + hat_count) / 2} hightlights have been reformatted!", MAIN_EMOJI))
+    print(bidirectional_pad(f" {(equal_count + hat_count) / 2} hightlights have been reformatted!", MAIN_EMOJI))
+    print(bidirectional_pad(f" {(heading_count)} headings have been reformatted!", MAIN_EMOJI))
+    print(bidirectional_pad(f" {(syntax_lang_count) / 2} codeblocks have been reformatted!", MAIN_EMOJI))
+    
     return new_text
 
 
